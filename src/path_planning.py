@@ -341,3 +341,4 @@ def output_image(name, path, out_path=''):
 import heuristics
 import aStar
 import dijkstra
+import thetaStar

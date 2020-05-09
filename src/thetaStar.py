@@ -49,19 +49,6 @@ def children(point,grid):
     return [link for link in links if link.value != 9]
 
 def thetaStar(start, goal, grid, heur='naive'):
-    """
-        Executes the A* path planning algorithm over a given grid.
-        Inputs:
-            - start: node from which to start.
-            - goal: node to which it is desired to arrive.
-            - grid: grid over which to execute the algorithm
-            - heur: heuristic function to use for the algorithm,
-            expressed as a string. Results will vary depending on
-            it. Must be implemented separatedly.
-        Outputs:
-            - ordered list of nodes representing the shortest path found
-            from start to goal.
-    """
     #The open and closed sets
     openset = set()
     closedset = set()
@@ -90,24 +77,41 @@ def thetaStar(start, goal, grid, heur='naive'):
         for node in children(current,grid):
             #If it is already in the closed set, skip it
             if node in closedset:
-                #Otherwise if it is already in the open set
-                if node in openset:
+                continue
+            #Otherwise if it is already in the open set
+            if node in openset:
+                #Check if we beat the G score 
+                new_g = current.G + current.move_cost(node)
+                if node.G > new_g:
+                    #If so, update the node to have a new parent
+                    node.G = new_g
+                    node.parent = current
+            else:
+                if (lineOfSight(current, node)):
+                    if (current.parent.G + current.parent.move_cost(node) < node.G):
+                        node.G = current.parent.G + current.parent.move_cost(node)
+                        node.parent = current.parent
+                        #if it is already in the open set
+                        if (node in openset):
+                            openset.remove(node)
+                else:
+                    if (current.G + current.move_cost(node) < node.G):
+                        node.G = current.G + current.move_cost(node)
+                        node.parent = current
+                        if (node in openset):
+                            openset.add(node)
 
-
-
-    #Throw an exception if there is no path
-    raise ValueError('No Path Found')
 
 pp.register_search_method('theta*', thetaStar)
 
 
-def lineOfSight(grid, node):
+def lineOfSight(current, node):
     f = 0
-
-    x0 = grid.x  # coordenada 'x' del punto inicial
-    y0 = grid.y  # coordenada 'y' del punto inicial
-    x1 = node.x  # coordenada 'x' del punto final
-    y1 = node.y  # coordenada 'y' del punto final
+    
+    x0 = current.point[0]  # coordenada 'x' del punto inicial
+    y0 = current.point[1]  # coordenada 'y' del punto inicial
+    x1 = node.point[0]  # coordenada 'x' del punto final
+    y1 = node.point[1]  # coordenada 'y' del punto final
 
     # Se calculan las distancias de los puntos
     distx = x1 - x0
@@ -150,6 +154,12 @@ def lineOfSight(grid, node):
                 return False
             y0 = y0 + sy
     return True
+
+def isTransitable(node, grid):
+    """
+    """
+    x,y = point.grid_point
+
 
 
 
