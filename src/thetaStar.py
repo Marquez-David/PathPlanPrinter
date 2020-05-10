@@ -49,6 +49,19 @@ def children(point,grid):
     return [link for link in links if link.value != 9]
 
 def thetaStar(start, goal, grid, heur='naive'):
+    """
+    Executes the Theta* path planning algorithm over a given grid.
+        Inputs:
+            - start: node from which to start.
+            - goal: node to which it is desired to arrive.
+            - grid: grid over which to execute the algorithm
+            - heur: heuristic function to use for the algorithm,
+            expressed as a string. Results will vary depending on
+            it. Must be implemented separatedly.
+        Outputs:
+            - ordered list of nodes representing the shortest path found
+            from start to goal.
+    """
     #The open and closed sets
     openset = set()
     closedset = set()
@@ -78,7 +91,7 @@ def thetaStar(start, goal, grid, heur='naive'):
             if node in closedset: #If it is already in the closed set, skip it
                 continue
             if node in openset: #Otherwise if it is already in the open set
-                if lineOfSight(current.parent, node):
+                if lineOfSight(current.parent, node, grid):
                     if node.G > current.G + current.move_cost(node): #Check if we beat the G score -> update the node to have a new parent
                         node.G = current.parent.G + current.parent.move_cost(node)
                         node.parent = current.parent
@@ -99,7 +112,15 @@ def thetaStar(start, goal, grid, heur='naive'):
                 
 pp.register_search_method('theta*', thetaStar)
 
-def lineOfSight(current, node):
+def lineOfSight(current, node, grid):
+    """
+    Determina si dos puntos tienen linea de vision.
+        Inputs:
+            - current: punto 1.
+            - node: punto 2.
+        Outputs:
+            - si hay una linea dee vision disponible entre ambos puntos.
+    """
     x0, y0 = current.point
     x1, y1 = node.point
     dist_y = y1 - y0
@@ -107,7 +128,7 @@ def lineOfSight(current, node):
     f = 0
     sx = current.point[0]
     sy = current.point[1]
-
+    
     if dist_y < 0:
         dist_y = -dist_y
         sy = -1
@@ -124,25 +145,51 @@ def lineOfSight(current, node):
         while x0 != x1:
             f = f + dist_y
             if f >= dist_x:
-                if grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
+                if isBlocked((x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)), grid):
                     return False
                 y0 = y0 + sy
                 f = f - dist_x
-            if f != 0 and grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
+            if f != 0 and isBlocked((x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)), grid):
                 return False
-            if dist_y == 0 and grid(x0 + ((sx - 1)/2), y0) and grid(x0 + ((sy - 1)/2), y0 - 1):
+            if dist_y == 0 and isBlocked((x0 + ((sx - 1)/2), y0), grid) and isBlocked((x0 + ((sx - 1)/2), y0 - 1), grid):
                 return False
+            x0 = x0 + sx
     else:
         while y0 != y1:
             f = f + dist_x
             if f >= dist_y:
-                if grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
+                if isBlocked((x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)), grid):
                     return False
                 x0 = x0 + sx
                 f = f - dist_y
-                if f != 0 and grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
-                    return False
-                if dist_x and grid(x0, y0 + ((sy - 1)/2)) and grid(x0 - 1, y0 + ((sy - 1)/2)):
-                    return False
-                y0 = y0 + sy
+            if f != 0 and isBlocked((x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)), grid):
+                return False
+            if dist_x == 0 and isBlocked((x0, y0 + ((sy - 1)/2)), grid) and isBlocked((x0 - 1, y0 + ((sy - 1)/2)), grid):
+                return False
+            y0 = y0 + sy
     return True
+
+def isBlocked(node, grid):
+    """
+    Determina si la celda correspondiente al punto (x, y) esta bloqueada.
+    Inputs:
+        - point: punto que queremos analizar.
+        - grid: grid utilizado.
+    Outputs:
+        - Devuelve true si la celda del punto dado esta bloqueda, false si es transitable.
+    """
+    inside = False
+    transitable = False
+    x = node[0]
+    y = node[1]
+    if x > 0 and x < len(grid) - 1:
+        if y > 0 and y < len(grid[0]) - 1:
+            inside = True
+    if inside:
+        if node.value == 1:
+            transitable = True
+    return not(transitable) 
+    
+
+
+
