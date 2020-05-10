@@ -75,91 +75,74 @@ def thetaStar(start, goal, grid, heur='naive'):
         closedset.add(current)
         #Loop through the node's children/siblings
         for node in children(current,grid):
-            #If it is already in the closed set, skip it
-            if node in closedset:
+            if node in closedset: #If it is already in the closed set, skip it
                 continue
-            #Otherwise if it is already in the open set
-            if node in openset:
-                #Check if we beat the G score 
-                new_g = current.G + current.move_cost(node)
-                if node.G > new_g:
-                    #If so, update the node to have a new parent
-                    node.G = new_g
-                    node.parent = current
-            else:
-                if (lineOfSight(current, node)):
-                    if (current.parent.G + current.parent.move_cost(node) < node.G):
+            if node in openset: #Otherwise if it is already in the open set
+                if lineOfSight(current.parent, node):
+                    if node.G > current.G + current.move_cost(node): #Check if we beat the G score -> update the node to have a new parent
                         node.G = current.parent.G + current.parent.move_cost(node)
                         node.parent = current.parent
-                        #if it is already in the open set
-                        if (node in openset):
-                            openset.remove(node)
                 else:
-                    if (current.G + current.move_cost(node) < node.G):
+                    if current.G + current.move_cost(node) < node.G:
                         node.G = current.G + current.move_cost(node)
                         node.parent = current
-                        if (node in openset):
-                            openset.add(node)
-
-
+            else:
+                #If it isn't in the open set, calculate the G and H score for the node
+                node.G = current.G + current.move_cost(node)
+                node.H = pp.heuristic[heur](node, goal)
+                #Set the parent to our current item
+                node.parent = current
+                #Add it to the set
+                openset.add(node)
+    #Throw an exception if there is no path
+    raise ValueError('No Path Found')
+                
 pp.register_search_method('theta*', thetaStar)
 
-
 def lineOfSight(current, node):
+    x0, y0 = current.point
+    x1, y1 = node.point
+    dist_y = y1 - y0
+    dist_x = x1- x0
     f = 0
-    
-    x0 = current.point[0]  # coordenada 'x' del punto inicial
-    y0 = current.point[1]  # coordenada 'y' del punto inicial
-    x1 = node.point[0]  # coordenada 'x' del punto final
-    y1 = node.point[1]  # coordenada 'y' del punto final
+    sx = current.point[0]
+    sy = current.point[1]
 
-    # Se calculan las distancias de los puntos
-    distx = x1 - x0
-    disty = y1 - y0
-
-    if (disty < 0):
-        disty = -disty
+    if dist_y < 0:
+        dist_y = -dist_y
         sy = -1
     else:
         sy = 1
-    if (distx < 0):
-        distx = -distx
+
+    if dist_x < 0:
+        dist_x = -dist_x
         sx = -1
     else:
         sx = 1
-
-    if (distx >= disty):
-        while (x0 != x1):
-            f = f + disty
-            if (f >= distx):
-                if (grid(x0 + (sx - 1)/2, y0 + (sy - 1)/2)):
+    
+    if dist_x >= dist_y:
+        while x0 != x1:
+            f = f + dist_y
+            if f >= dist_x:
+                if grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
                     return False
                 y0 = y0 + sy
-                f = f - distx
-            if (f != 0 and grid(x0 + ((sx - 1)/2, y0 + (sy - 1)/2))):
+                f = f - dist_x
+            if f != 0 and grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
                 return False
-            if (disty == 0 and grid(x0 + (sx - 1)/2, y0) and grid(x0 + (sx - 1)/2, y0 - 1)):
+            if dist_y == 0 and grid(x0 + ((sx - 1)/2), y0) and grid(x0 + ((sy - 1)/2), y0 - 1):
                 return False
     else:
-        while (y0 != y1):
-            f = f + distx
-            if (f >= disty):
-                if (grid(x0 + (sx - 1)/2, y0 + (sy - 1)/2)):
+        while y0 != y1:
+            f = f + dist_x
+            if f >= dist_y:
+                if grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
                     return False
                 x0 = x0 + sx
-                f = f - disty
-            if (f != 0 and grid(x0 + (sx - 1)/2, y0 + (sy - 1)/2)):
-                return False
-            if (distx == 0 and grid(x0, y0 + (sy - 1)/2) and grid(x0 - 1, y0 + (sy - 1)/2)):
-                return False
-            y0 = y0 + sy
+                f = f - dist_y
+                if f != 0 and grid(x0 + ((sx - 1)/2), y0 + ((sy - 1)/2)):
+                    return False
+                if dist_x and grid(x0, y0 + ((sy - 1)/2)) and grid(x0 - 1, y0 + ((sy - 1)/2)):
+                    return False
+                y0 = y0 + sy
     return True
-
-def isTransitable(node, grid):
-    """
-    """
-    x,y = point.grid_point
-
-
-
-
