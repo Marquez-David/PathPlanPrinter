@@ -92,10 +92,12 @@ def thetaStar(start, goal, grid, heur='naive'):
                 continue
             if node in openset: #Otherwise if it is already in the open set
                 if lineOfSight(current.parent, node, grid):
+                    print("Uso la heuristica Theta*")
                     if node.G > current.G + current.move_cost(node): #Check if we beat the G score -> update the node to have a new parent
                         node.G = current.parent.G + current.parent.move_cost(node)
                         node.parent = current.parent
                 else:
+                    print("Uso la heuristica A*")
                     if current.G + current.move_cost(node) < node.G:
                         node.G = current.G + current.move_cost(node)
                         node.parent = current
@@ -188,7 +190,7 @@ def isBlocked(node, grid):
     if inside:
         if node.value == 1:
             transitable = True
-    return not(transitable) 
+    return transitable
     
 
 
