@@ -187,9 +187,8 @@ def isBlocked(node, grid):
     if x > 0 and x < len(grid) - 1:
         if y > 0 and y < len(grid[0]) - 1:
             inside = True
-    if inside:
-        if node.value == 1:
-            transitable = True
+    if inside and node.value == 1:
+        transitable = True
     return transitable
     
 
