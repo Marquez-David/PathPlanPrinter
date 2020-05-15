@@ -1,78 +1,23 @@
-These are just test lines.
+(move r p0000 p1916)
 
-They should not break the program
-At all
+(recargar_bateria r1 )
 
-% But better safe than sorry
+(recargar_bateria r1 )
 
-% 0.000: ( crash )
+(tomar_imagen r1 p3030 mars_image_0001)
 
-% Let's see what happens
+(contactar_tierra )
 
+(move r p1916 p2025)
 
+(tomar_imagen r1 p2025 mars_image_0002)
 
-(move r p0000 p3030)
+(recargar_bateria r1 )
 
-10: (recharge_batteries )
+(recargar_bateria r1 )
 
-11: (recharge_batteries )
+(move r p2025 p3118)
 
-12: (recharge_batteries )
+(tomar_muestra r1 p3118 grown_sign_0001)
 
-11: (move r p3030 p2025)
-
-13: (take_picture )
-
-14: (recharge_batteries )
-
-15: (recharge_batteries )
-
-17: (move r p2025 p1010)
-
-16: (take_picture )
-
-10: (recharge_batteries )
-
-11: (recharge_batteries )
-
-12: (recharge_batteries )
-
-13: (recharge_batteries )
-
-14: (recharge_batteries )
-
-15: (recharge_batteries )
-
-10: (recharge_batteries )
-
-11: (recharge_batteries )
-
-12: (recharge_batteries )
-
-13: (recharge_batteries )
-
-14: (recharge_batteries )
-
-15: (recharge_batteries )
-
-10: (recharge_batteries )
-
-11: (recharge_batteries )
-
-12: (recharge_batteries )
-
-13: (recharge_batteries )
-
-14: (recharge_batteries )
-
-15: (recharge_batteries )
-
-21: (move r p1010 p2530)
-
-22: (get_co2_reading )
-
-21: (move r p2530 p3010)
-
-23: (drill)
-
-22: (take_picture )
+(move r p3118 p1216)

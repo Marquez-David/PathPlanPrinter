@@ -1,0 +1,12 @@
+('move', (19, 16))
+recargar_bateria
+recargar_bateria
+tomar_imagen
+contactar_tierra
+('move', (20, 25))
+tomar_imagen
+recargar_bateria
+recargar_bateria
+('move', (31, 18))
+tomar_muestra
+('move', (12, 16))
