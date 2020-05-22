@@ -17,7 +17,7 @@ def calculate_path(src, dst):
     # in order to modify the behavior of the path planning part of the execution.
     return pp.run_path_planning(step,
                                     start=(src[0], src[1]),
-                                    finish=(dst[0], dst[1]), algo='theta*', heur='manhattan',
+                                    finish=(dst[0], dst[1]), algo='Dijkstra', heur='naive',
                                     show_grid=True)
 
 # Function in charge of parsing. Copy, paste, pass the path to the source text file
