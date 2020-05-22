@@ -34,7 +34,7 @@ def manhattan(point,point2):
     """
         Function that performs Manhattan heuristic.
     """
-    return abs(point.point[0] - point2.point[0]) + abs(point.point[1] - point2.point[1])
+    return abs(point.grid_point[0] - point2.grid_point[0]) + abs(point.grid_point[1] - point2.grid_point[1])
 
 pp.register_heuristic('manhattan', manhattan)
 
@@ -42,8 +42,8 @@ def naive(point, point2):
     """
         Function that performs a naive heuristic.
     """
-    delta_x = abs(point.point[0] - point2.point[0])
-    delta_y = abs(point.point[1] - point2.point[1])
+    delta_x = abs(point.grid_point[0] - point2.grid_point[0])
+    delta_y = abs(point.grid_point[1] - point2.grid_point[1])
     return max(delta_x, delta_y) + (math.sqrt(2) - 1) * min(delta_x, delta_y)
 
 pp.register_heuristic('naive', naive)
@@ -52,6 +52,6 @@ def euclidean(point, point2):
     """
         Function that performs euclidean heuristic.
     """
-    return math.sqrt((point2.point[0] - point.point[0])**2 + (point2.point[1] - point.point[1])**2)
+    return math.sqrt((point2.grid_point[0] - point.grid_point[0])**2 + (point2.grid_point[1] - point.grid_point[1])**2)
 
 pp.register_heuristic('euclidean', euclidean)

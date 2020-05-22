@@ -91,7 +91,7 @@ def thetaStar(start, goal, grid, heur='naive'):
             if node in closedset: #If it is already in the closed set, skip it
                 continue
             if node in openset: #Otherwise if it is already in the open set
-                if lineOfSight(current.parent, node, grid):
+                if current.parent != None and lineOfSight(current.parent, node, grid):
                     print("Uso la heuristica Theta*")
                     if node.G > current.G + current.move_cost(node): #Check if we beat the G score -> update the node to have a new parent
                         node.G = current.parent.G + current.parent.move_cost(node)
@@ -123,13 +123,13 @@ def lineOfSight(current, node, grid):
         Outputs:
             - si hay una linea dee vision disponible entre ambos puntos.
     """
-    x0, y0 = current.point
-    x1, y1 = node.point
+    x0, y0 = current.grid_point
+    x1, y1 = node.grid_point
     dist_y = y1 - y0
     dist_x = x1- x0
     f = 0
-    sx = current.point[0]
-    sy = current.point[1]
+    sx = current.grid_point[0]
+    sy = current.grid_point[1]
     
     if dist_y < 0:
         dist_y = -dist_y
@@ -180,16 +180,11 @@ def isBlocked(node, grid):
     Outputs:
         - Devuelve true si la celda del punto dado esta bloqueda, false si es transitable.
     """
-    inside = False
-    transitable = False
     x = node[0]
     y = node[1]
-    if x > 0 and x < len(grid) - 1:
-        if y > 0 and y < len(grid[0]) - 1:
-            inside = True
-    if inside and node.value == 1:
-        transitable = True
-    return transitable
+
+    return (grid[int(x)][int(y)].value >= 5)
+
     
 
 
